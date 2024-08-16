@@ -1,0 +1,149 @@
+.order {
+    padding: 20px;
+}
+
+.order h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.order-list {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.order-item {
+    display: grid;
+    grid-template-columns: 0.4fr 3fr 1fr 0.4fr 1fr;
+    align-items: start;
+    gap: 20px;
+    border: 1px solid tomato;
+    padding: 20px;
+    margin: 20px 0;
+    font-size: 16px;
+    color: #505050;
+}
+
+.order-item img {
+    width: 50px;
+    height: auto;
+}
+
+.order-item-food,
+.order-item-name {
+    font-weight: 600;
+}
+
+.order-item-name {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.order-item-address {
+    margin-bottom: 10px;
+}
+
+.order-item select {
+    background-color: #ffe8e4;
+    border: 1px solid tomato;
+    width: max(10vw, 120px);
+    padding: 10px;
+    outline: none;
+}
+
+:root .order-item select {
+    background-color: rgb(29, 29, 29);
+    color: white;
+    border: 1px solid tomato;
+}
+
+.lightcolors .order-item select {
+    background-color: #ffe8e4;
+    color: rgb(25, 25, 25);
+    border: 1px solid tomato;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination-button {
+    background-color: #ffe8e4;
+    border: 1px solid tomato;
+    color: #505050;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pagination-button.active {
+    background-color: tomato;
+    color: white;
+}
+
+@media (max-width: 1200px) {
+    .order-item {
+        grid-template-columns: 0.5fr 1.5fr 1fr 1fr 0.5fr;
+        font-size: 14px;
+    }
+
+    .order-item img {
+        width: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .order-item {
+        grid-template-columns: 0.4fr 2fr 2fr;
+        font-size: 14px;
+    }
+
+    .order-item img {
+        width: 40px;
+    }
+
+    .order-item p:nth-child(4),
+    .order-item p:nth-child(5) {
+        grid-column: span 1;
+        justify-self: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .order-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .order-item img {
+        width: 80px;
+    }
+
+    .order-item p {
+        text-align: center;
+        margin: 5px 0;
+    }
+
+    .order-item-food,
+    .order-item-name {
+        text-align: center;
+    }
+
+    .order-item select {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+    }
+
+    .pagination-button {
+        margin: 5px;
+    }
+}
