@@ -14,4 +14,8 @@ export const assets ={
     parcel_icon
 }
 
+<<<<<<< HEAD
 export const url = 'https://mealdash-backend.onrender.com'
+=======
+export const url = 'https://mealdash-backend.onrender.com'
+>>>>>>> 19738addc0c4f95ae1053647ed2cb7dce7427349

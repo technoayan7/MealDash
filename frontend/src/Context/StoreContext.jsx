@@ -5,7 +5,11 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
 
+<<<<<<< HEAD
     const url = "https://mealdash-backend.onrender.com";
+=======
+    const url = "https://mealdash-backend.onrender.com"
+>>>>>>> 19738addc0c4f95ae1053647ed2cb7dce7427349
     const [food_list, setFoodList] = useState([]);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")
