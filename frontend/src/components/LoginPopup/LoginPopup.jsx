@@ -3,6 +3,7 @@ import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../Context/StoreContext";
 import axios from "axios";
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPopup = ({ setShowLogin }) => {
   const { url, setToken } = useContext(StoreContext);
@@ -36,8 +37,25 @@ const LoginPopup = ({ setShowLogin }) => {
       localStorage.setItem("token", response.data.token);
       setShowLogin(false);
     } else {
+      alert(response.data.message);
+    }
+  };
+
+  const onGoogleSuccess = async (response) => {
+    const res = await axios.post(`${url}/api/user/google-login`, {
+      tokenId: response.credential,
+    });
+    if (res.data.success) {
+      setToken(res.data.token);
+      localStorage.setItem("token", res.data.token);
+      setShowLogin(false);
+    } else {
       alert(res.data.message);
     }
+  };
+
+  const onGoogleFailure = () => {
+    alert("Google Sign-In failed. Please try again.");
   };
 
   return (
@@ -84,10 +102,14 @@ const LoginPopup = ({ setShowLogin }) => {
         <button type="submit">
           {currState === "Sign Up" ? "Create account" : "Login"}
         </button>
+        <GoogleLogin
+          onSuccess={onGoogleSuccess}
+          onError={onGoogleFailure}
+        />
         <div className="login-popup-condition">
           <input type="checkbox" required />
           <p className="continuee">
-            By continuing, i agree to the terms of use & privacy policy
+            By continuing, I agree to the terms of use & privacy policy
           </p>
         </div>
         {currState === "Login" ? (

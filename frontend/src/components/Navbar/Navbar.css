@@ -122,8 +122,9 @@
     justify-content: center;
     position: relative;
     border: 1px solid var(--border-color);
-    border-radius: 5px;
+    border-radius: 35px;
     cursor: pointer;
+
 }
 
 /* checkbox */
@@ -241,7 +242,8 @@
 }
 
 :root .signbutton {
-    color: white
+    color: white;
+    font-size: large;
 }
 
 :root .signbutton:hover {

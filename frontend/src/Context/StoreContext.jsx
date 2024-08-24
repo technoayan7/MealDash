@@ -4,7 +4,8 @@ import axios from "axios";
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
-    const url = "https://mealdash-backend.onrender.com"
+    // const url = "http://localhost:4000";
+    const url = "https://mealdash-backend.onrender.com";
     const [food_list, setFoodList] = useState([]);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")

@@ -135,7 +135,7 @@ const Navbar = ({ setShowLogin }) => {
         </div>
         {!token ? (
           <button className="signbutton" onClick={() => setShowLogin(true)}>
-            sign in
+            Sign in
           </button>
         ) : (
           <div className="navbar-profile">

@@ -46,7 +46,7 @@ const Navbar = () => {
         <label
           htmlFor="visual-toggle"
           id="visual-toggle-button"
-          // onclick="visualMode()"
+          //onclick="visualMode()"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
