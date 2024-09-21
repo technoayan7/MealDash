@@ -10,21 +10,32 @@ const Orders = ({ url }) => {
   const [ordersPerPage] = useState(5); // Number of orders to display per page
 
   const fetchAllOrders = async () => {
-    const response = await axios.get(`${url}/api/order/list`);
-    if (response.data.success) {
-      setOrders(response.data.data);
-    } else {
-      toast.error("Error");
+    try {
+      const response = await axios.get(`${url}/api/order/list`);
+      if (response.data.success) {
+        // Reverse the orders before setting to state
+        setOrders(response.data.data.reverse());
+      } else {
+        toast.error("Error fetching orders");
+      }
+    } catch (error) {
+      toast.error("An error occurred while fetching orders");
     }
   };
 
   const statusHandler = async (event, orderId) => {
-    const response = await axios.post(`${url}/api/order/status`, {
-      orderId,
-      status: event.target.value,
-    });
-    if (response.data.success) {
-      await fetchAllOrders();
+    try {
+      const response = await axios.post(`${url}/api/order/status`, {
+        orderId,
+        status: event.target.value,
+      });
+      if (response.data.success) {
+        await fetchAllOrders();
+      } else {
+        toast.error("Error updating status");
+      }
+    } catch (error) {
+      toast.error("An error occurred while updating status");
     }
   };
 
