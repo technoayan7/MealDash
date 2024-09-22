@@ -29,6 +29,7 @@ const PlaceOrder = () => {
     setCartItems,
     currency,
     deliveryCharge,
+    discount, // Access discount from context
   } = useContext(StoreContext);
 
   const navigate = useNavigate();
@@ -49,11 +50,21 @@ const PlaceOrder = () => {
         orderItems.push(itemInfo);
       }
     });
+
+    // Calculate discounted total amount
+    let totalAmount = getTotalCartAmount();
+    totalAmount = totalAmount * (1 - discount) + deliveryCharge;
+    totalAmount =
+      payment === "cod"
+        ? Math.round(totalAmount) 
+        : parseFloat(totalAmount.toFixed(2));
+
     let orderData = {
       address: data,
       items: orderItems,
-      amount: getTotalCartAmount() + deliveryCharge,
+      amount: totalAmount,
     };
+
     if (payment === "stripe") {
       let response = await axios.post(url + "/api/order/place", orderData, {
         headers: { token },
@@ -69,7 +80,7 @@ const PlaceOrder = () => {
         headers: { token },
       });
       if (response.data.success) {
-        navigate("/myorders");
+        navigate("/MyOrders");
         toast.success(response.data.message);
         setCartItems({});
       } else {
@@ -80,10 +91,10 @@ const PlaceOrder = () => {
 
   useEffect(() => {
     if (!token) {
-      toast.error("to place an order sign in first");
-      navigate("/cart");
+      toast.error("To place an order, sign in first");
+      navigate("/Cart");
     } else if (getTotalCartAmount() === 0) {
-      navigate("/cart");
+      navigate("/Cart");
     }
   }, [token]);
 
@@ -182,6 +193,19 @@ const PlaceOrder = () => {
               </p>
             </div>
             <hr />
+            {discount > 0 && (
+              <>
+                <div className="cart-total-details">
+                  <p>Discount</p>
+                  <p>
+                    - {currency}
+                    {(getTotalCartAmount() * discount).toFixed(2)}{" "}
+                    {/* Show discount */}
+                  </p>
+                </div>
+                <hr />
+              </>
+            )}
             <div className="cart-total-details">
               <p>Delivery Fee</p>
               <p>
@@ -194,9 +218,20 @@ const PlaceOrder = () => {
               <b>Total</b>
               <b>
                 {currency}
-                {getTotalCartAmount() === 0
-                  ? 0
-                  : getTotalCartAmount() + deliveryCharge}
+                {
+                  getTotalCartAmount() === 0
+                    ? 0
+                    : payment === "cod"
+                    ? Math.round(
+                        getTotalCartAmount() * (1 - discount) + deliveryCharge
+                      ) // Round to whole number for COD
+                    : parseFloat(
+                        (
+                          getTotalCartAmount() * (1 - discount) +
+                          deliveryCharge
+                        ).toFixed(2)
+                      ) // Two decimal places for other payments
+                }
               </b>
             </div>
           </div>
