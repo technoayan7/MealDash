@@ -41,11 +41,6 @@ const Footer = () => {
       <p className="footer-copyright">
         Copyright 2024 © mealdash-ui.onrender.com - All Right Reserved.
       </p>
-      <p>
-        This project is purely for educational purposes, no real business
-        transactions are involved. All food data is owned by The Hungry Helper
-        Group.
-      </p>
     </div>
   );
 }
