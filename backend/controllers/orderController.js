@@ -5,19 +5,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 //config variables
 const currency = "inr";
-const deliveryCharge = 50;
+const deliveryCharge = 40;
 const frontend_URL = 'http://localhost:5173';
 
 // Placing User Order for Frontend using stripe
 const placeOrder = async (req, res) => {
-
     try {
         const newOrder = new orderModel({
             userId: req.body.userId,
             items: req.body.items,
             amount: req.body.amount,
             address: req.body.address,
-        })
+        });
         await newOrder.save();
         await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
 
@@ -27,10 +26,10 @@ const placeOrder = async (req, res) => {
                 product_data: {
                     name: item.name
                 },
-                unit_amount: item.price * 100 
+                unit_amount: item.price * 100
             },
             quantity: item.quantity
-        }))
+        }));
 
         line_items.push({
             price_data: {
@@ -41,22 +40,32 @@ const placeOrder = async (req, res) => {
                 unit_amount: deliveryCharge * 100
             },
             quantity: 1
-        })
+        });
 
         const session = await stripe.checkout.sessions.create({
             success_url: `${frontend_URL}/verify?success=true&orderId=${newOrder._id}`,
             cancel_url: `${frontend_URL}/verify?success=false&orderId=${newOrder._id}`,
             line_items: line_items,
+            allow_promotion_codes: true, // Allow promotion codes
             mode: 'payment',
         });
+
+        // Retrieve the session to get the final amount after discount (if promocode is applied)
+        const updatedSession = await stripe.checkout.sessions.retrieve(session.id);
+
+        // Update the order amount in the database if there's a discount
+        if (updatedSession.total_details.amount_discount > 0) {
+            const finalAmount = updatedSession.amount_total / 100; // amount_total gives final amount in cents
+            await orderModel.findByIdAndUpdate(newOrder._id, { amount: finalAmount });
+        }
 
         res.json({ success: true, session_url: session.url });
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" })
+        res.json({ success: false, message: "Error" });
     }
-}
+};
 
 // Placing User Order for Frontend using stripe
 const placeOrderCod = async (req, res) => {
