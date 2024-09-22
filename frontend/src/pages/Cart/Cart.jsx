@@ -106,7 +106,7 @@ const Cart = () => {
                       <img
                         className="add-icon"
                         onClick={() => addToCart(item._id)}
-                        src={assets.add_icon_white}
+                        src={assets.add_icon_green}
                         alt="Add"
                       />
                     </div>
