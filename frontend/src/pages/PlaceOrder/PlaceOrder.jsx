@@ -52,11 +52,11 @@ const PlaceOrder = () => {
     });
 
     // Calculate discounted total amount
-    let totalAmount = getTotalCartAmount();
-    totalAmount = totalAmount * (1 - discount) + deliveryCharge;
+    let totalAmount = getTotalCartAmount() + deliveryCharge;
+    totalAmount = totalAmount * (1 - discount);
     totalAmount =
       payment === "cod"
-        ? Math.round(totalAmount) 
+        ? Math.round(totalAmount)
         : parseFloat(totalAmount.toFixed(2));
 
     let orderData = {
@@ -120,22 +120,24 @@ const PlaceOrder = () => {
             required
           />
         </div>
-        <input
-          type="email"
-          name="email"
-          onChange={onChangeHandler}
-          value={data.email}
-          placeholder="Email address"
-          required
-        />
-        <input
-          type="text"
-          name="street"
-          onChange={onChangeHandler}
-          value={data.street}
-          placeholder="Street"
-          required
-        />
+        <div className="multi-field">
+          <input
+            type="email"
+            name="email"
+            onChange={onChangeHandler}
+            value={data.email}
+            placeholder="Email address"
+            required
+          />
+          <input
+            type="text"
+            name="phone"
+            onChange={onChangeHandler}
+            value={data.phone}
+            placeholder="Phone"
+            required
+          />
+        </div>
         <div className="multi-field">
           <input
             type="text"
@@ -157,29 +159,21 @@ const PlaceOrder = () => {
         <div className="multi-field">
           <input
             type="text"
+            name="street"
+            onChange={onChangeHandler}
+            value={data.street}
+            placeholder="Street"
+            required
+          />
+          <input
+            type="text"
             name="zipcode"
             onChange={onChangeHandler}
             value={data.zipcode}
             placeholder="Zip code"
             required
           />
-          <input
-            type="text"
-            name="country"
-            onChange={onChangeHandler}
-            value={data.country}
-            placeholder="Country"
-            required
-          />
         </div>
-        <input
-          type="text"
-          name="phone"
-          onChange={onChangeHandler}
-          value={data.phone}
-          placeholder="Phone"
-          required
-        />
       </div>
       <div className="place-order-right">
         <div className="cart-total">
@@ -190,6 +184,14 @@ const PlaceOrder = () => {
               <p>
                 {currency}
                 {getTotalCartAmount()}
+              </p>
+            </div>
+            <hr />
+            <div className="cart-total-details">
+              <p>Delivery Fee</p>
+              <p>
+                {currency}
+                {getTotalCartAmount() === 0 ? 0 : deliveryCharge}
               </p>
             </div>
             <hr />
@@ -207,14 +209,6 @@ const PlaceOrder = () => {
               </>
             )}
             <div className="cart-total-details">
-              <p>Delivery Fee</p>
-              <p>
-                {currency}
-                {getTotalCartAmount() === 0 ? 0 : deliveryCharge}
-              </p>
-            </div>
-            <hr />
-            <div className="cart-total-details">
               <b>Total</b>
               <b>
                 {currency}
@@ -223,12 +217,12 @@ const PlaceOrder = () => {
                     ? 0
                     : payment === "cod"
                     ? Math.round(
-                        getTotalCartAmount() * (1 - discount) + deliveryCharge
+                        (getTotalCartAmount() + deliveryCharge) * (1 - discount)
                       ) // Round to whole number for COD
                     : parseFloat(
                         (
-                          getTotalCartAmount() * (1 - discount) +
-                          deliveryCharge
+                          (getTotalCartAmount() + deliveryCharge) *
+                          (1 - discount)
                         ).toFixed(2)
                       ) // Two decimal places for other payments
                 }
