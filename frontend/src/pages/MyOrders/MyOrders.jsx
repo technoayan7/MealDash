@@ -44,7 +44,7 @@ const MyOrders = () => {
                   })}
                 </p>
                 {/* Ensure amount is shown with 2 decimal places */}
-                <p>${order.amount.toFixed(2)}</p>
+                <p>₹{order.amount.toFixed(2)}</p>
                 <p>Items: {order.items.length}</p>
                 <p>
                   <span>&#x25cf;</span> <b>{order.status}</b>
