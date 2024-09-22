@@ -39,8 +39,8 @@ const Cart = () => {
 
   const recalculateTotal = (subtotalAmount, discountValue) => {
     const newTotal =
-      subtotalAmount * (1 - discountValue) +
-      (subtotalAmount > 0 ? deliveryCharge : 0);
+      (subtotalAmount +
+      (subtotalAmount > 0 ? deliveryCharge : 0)) * (1 - discountValue);
 
     setFinalTotal(parseFloat(newTotal.toFixed(2))); // Convert back to number
   };
@@ -76,8 +76,8 @@ const Cart = () => {
   return (
     <div className="cart">
       <div className="cart-items">
-        <div className="cart-items-title">
-          <p>Items</p>
+        <div className="headings cart-items-title">
+          <p id="head1">Items</p>
           <p>Title</p>
           <p>Price</p>
           <p>Quantity</p>
@@ -92,7 +92,7 @@ const Cart = () => {
               return (
                 <div key={index}>
                   <div className="cart-items-title cart-items-item">
-                    <img src={`${url}/images/${item.image}`} alt={item.name} />
+                    <img id="logo" src={`${url}/images/${item.image}`} alt={item.name} />
                     <p>{item.name}</p>
                     <p>{formatCurrency(item.price)}</p>
                     <div className="quantity-controls">
@@ -132,6 +132,11 @@ const Cart = () => {
               <p>{formatCurrency(subtotal)}</p>
             </div>
             <hr />
+            <div className="cart-total-details">
+              <p>Delivery Fee</p>
+              <p>{formatCurrency(subtotal === 0 ? 0 : deliveryCharge)}</p>
+            </div>
+            <hr />
             {isPromoApplied && (
               <>
                 <div className="cart-total-details">
@@ -141,11 +146,6 @@ const Cart = () => {
                 <hr />
               </>
             )}
-            <div className="cart-total-details">
-              <p>Delivery Fee</p>
-              <p>{formatCurrency(subtotal === 0 ? 0 : deliveryCharge)}</p>
-            </div>
-            <hr />
             <div className="cart-total-details">
               <b>Total</b>
               <b>{formatCurrency(finalTotal)}</b>
@@ -162,7 +162,7 @@ const Cart = () => {
             <div className="cart-promocode-input">
               <input
                 type="text"
-                placeholder="Promo code"
+                placeholder="TRY -> 'TASTY40' "
                 value={promoInput}
                 onChange={(e) => setPromoInput(e.target.value)}
                 onKeyDown={(e) => {
