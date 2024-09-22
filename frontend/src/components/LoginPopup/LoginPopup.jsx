@@ -3,7 +3,7 @@ import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../Context/StoreContext";
 import axios from "axios";
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from "@react-oauth/google";
 
 const LoginPopup = ({ setShowLogin }) => {
   const { url, setToken } = useContext(StoreContext);
@@ -14,6 +14,7 @@ const LoginPopup = ({ setShowLogin }) => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false); // Loading state
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
@@ -21,8 +22,32 @@ const LoginPopup = ({ setShowLogin }) => {
     setData((data) => ({ ...data, [name]: value }));
   };
 
+  const handlePostRequest = async (newUrl, requestData) => {
+    try {
+      const response = await axios.post(newUrl, requestData);
+
+      if (response.data.success) {
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
+        setTimeout(() => {
+          setLoading(false); // Hide spinner after 3 seconds
+          setShowLogin(false);
+        }, 2000);
+      } else {
+        alert(response.data.message);
+        setLoading(false); // Hide spinner immediately
+      }
+    } catch (error) {
+      console.error("Error during request:", error);
+      alert("An error occurred. Please try again.");
+      setLoading(false); // Hide spinner immediately
+    }
+  };
+
   const onLogin = async (event) => {
     event.preventDefault();
+    setLoading(true); // Show spinner
+
     let newUrl = url;
     if (currState === "Login") {
       newUrl += "/api/user/login";
@@ -30,28 +55,16 @@ const LoginPopup = ({ setShowLogin }) => {
       newUrl += "/api/user/register";
     }
 
-    const response = await axios.post(newUrl, data);
-
-    if (response.data.success) {
-      setToken(response.data.token);
-      localStorage.setItem("token", response.data.token);
-      setShowLogin(false);
-    } else {
-      alert(response.data.message);
-    }
+    await handlePostRequest(newUrl, data);
   };
 
   const onGoogleSuccess = async (response) => {
-    const res = await axios.post(`${url}/api/user/google-login`, {
+    setLoading(true); // Show spinner
+    const googleLoginUrl = `${url}/api/user/google-login`;
+    const requestData = {
       tokenId: response.credential,
-    });
-    if (res.data.success) {
-      setToken(res.data.token);
-      localStorage.setItem("token", res.data.token);
-      setShowLogin(false);
-    } else {
-      alert(res.data.message);
-    }
+    };
+    await handlePostRequest(googleLoginUrl, requestData);
   };
 
   const onGoogleFailure = () => {
@@ -60,6 +73,11 @@ const LoginPopup = ({ setShowLogin }) => {
 
   return (
     <div className="login-popup">
+      {loading && (
+        <div className="spinner-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
       <form onSubmit={onLogin} className="login-popup-container">
         <div className="login-popup-title">
           <h2>{currState}</h2>
@@ -99,13 +117,12 @@ const LoginPopup = ({ setShowLogin }) => {
             required
           />
         </div>
-        <button type="submit">
+        <button type="submit" disabled={loading}>
+          {" "}
+          {/* Disable button when loading */}
           {currState === "Sign Up" ? "Create account" : "Login"}
         </button>
-        <GoogleLogin
-          onSuccess={onGoogleSuccess}
-          onError={onGoogleFailure}
-        />
+        <GoogleLogin onSuccess={onGoogleSuccess} onError={onGoogleFailure} />
         <div className="login-popup-condition">
           <input type="checkbox" required />
           <p className="continuee">
