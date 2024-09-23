@@ -9,10 +9,65 @@
 
 .food-display-list {
     display: grid;
+    /* Use grid layout for large screens */
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    /* Responsive grid */
     margin-top: 30px;
     gap: 30px;
-    row-gap: 50px;
+    /* Space between items */
+}
+
+/* Style for each food item */
+.food-item {
+    width: 100%;
+    /* Full width for items in grid layout */
+    margin: 0;
+    /* Remove default margin */
+    border-radius: 15px;
+    /* Rounded corners */
+    box-shadow: 5px 5px 5px #00000015;
+    /* Shadow effect */
+    transition: transform 0.3s;
+    /* Smooth transition on hover */
+}
+
+.food-item:hover {
+    transform: scale(1.05);
+    /* Slightly enlarge on hover */
+}
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+    .food-display-list {
+        display: flex;
+        /* Switch to flexbox for horizontal layout */
+        overflow-x: auto;
+        /* Allow horizontal scrolling */
+        scroll-snap-type: x mandatory;
+        /* Enable snap scrolling */
+        gap: 20px;
+        /* Space between items */
+        padding: 10px 0;
+        /* Padding for aesthetics */
+        scroll-behavior: smooth;
+        /* Smooth scrolling effect */
+    }
+
+    /* Style for food items in horizontal layout */
+    .food-item {
+        flex: 0 0 auto;
+        /* Prevent flex items from shrinking */
+        width: 240px;
+        /* Fixed width for items */
+        scroll-snap-align: center;
+        /* Snap items to the center */
+    }
+
+    /* Hide scrollbar for cleaner look */
+    .food-display-list::-webkit-scrollbar {
+        display: none;
+        /* Hide scrollbar in WebKit browsers */
+    }
 }
 
 :root .h2we {
