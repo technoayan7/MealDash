@@ -80,7 +80,7 @@ const PlaceOrder = () => {
         headers: { token },
       });
       if (response.data.success) {
-        navigate("/MyOrders");
+        navigate("/myorders");
         toast.success(response.data.message);
         setCartItems({});
       } else {
@@ -92,9 +92,9 @@ const PlaceOrder = () => {
   useEffect(() => {
     if (!token) {
       toast.error("To place an order, sign in first");
-      navigate("/Cart");
+      navigate("/cart");
     } else if (getTotalCartAmount() === 0) {
-      navigate("/Cart");
+      navigate("/cart");
     }
   }, [token]);
 
